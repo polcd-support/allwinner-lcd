@@ -1,0 +1,11 @@
+diff --git a/build.sh b/build.sh
+--- a/build.sh
++++ b/build.sh
+@@ -38,6 +38,7 @@
+   "lcd-mipi-10-800-1280-v2.dtsi"
+   "lcd-mipi-8-800-1280.dtsi"
+   "lcd-mipi-5-720-1280.dtsi"
++  "lcd-mipi-p050h031.dtsi"
+ )
+ 
+ function build_lunch()

@@ -1,0 +1,33 @@
+diff --git a/build.sh b/build.sh
+--- a/build.sh
++++ b/build.sh
+@@ -38,6 +38,7 @@
+   "lcd-mipi-10-800-1280-v2.dtsi"
+   "lcd-mipi-8-800-1280.dtsi"
+   "lcd-mipi-5-720-1280.dtsi"
++  "lcd-mipi-p055h022.dtsi"
+ )
+ 
+ function build_lunch()
+@@ -143,8 +144,21 @@
+ 
+ }
+ 
++function build_menuconfig()
++{
++    build/mkcommon.sh autoconfig  -o bsp -n default -i a133 -b c3 -k linux-4.9
++    cd kernel/linux-4.9/
++    make ARCH=arm64 menuconfig
++    cd -
++    build/mkcommon.sh saveconfig
++}
++
++
+ if [ x"$1" == "xlunch" ] ;then
+     build_lunch && exit 0
++elif [ x"$1" == "xmenuconfig" ] ;then
++    build_menuconfig 
++    exit 0;
+ else
+     source $BOARD_CONFIG_FILE
+     if [ "x$1" == "xall" ]; then

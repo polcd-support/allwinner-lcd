@@ -1,0 +1,34 @@
+diff --git a/device/config/chips/a133/configs/c3/kickpi-k5.dts b/device/config/chips/a133/configs/c3/kickpi-k5.dts
+--- a/device/config/chips/a133/configs/c3/kickpi-k5.dts
++++ b/device/config/chips/a133/configs/c3/kickpi-k5.dts
+@@ -1505,9 +1505,10 @@
+ 	allwinner,pins = "PB0", "PB1";
+ };
+ 
+-#include "lcd-lvds-7-1024-600.dtsi"
++// #include "lcd-lvds-7-1024-600.dtsi"
+ //#include "lcd-lvds-21-1920-1080.dtsi"
+ //#include "lcd-mipi-10-800-1280-v1.dtsi"
+ //#include "lcd-mipi-10-800-1280-v2.dtsi"
+ //#include "lcd-mipi-8-800-1280.dtsi"
+-//#include "lcd-mipi-5-720-1280.dtsi"
+\ No newline at end of file
++//#include "lcd-mipi-5-720-1280.dtsi"
++#include "lcd-mipi-p055h022.dtsi"
+\ No newline at end of file
+diff --git a/device/config/chips/a133/configs/c3/kickpi-k5c.dts b/device/config/chips/a133/configs/c3/kickpi-k5c.dts
+--- a/device/config/chips/a133/configs/c3/kickpi-k5c.dts
++++ b/device/config/chips/a133/configs/c3/kickpi-k5c.dts
+@@ -1513,9 +1513,10 @@
+ 	allwinner,pins = "PB0", "PB1";
+ };
+ 
+-#include "lcd-lvds-7-1024-600.dtsi"
++//#include "lcd-lvds-7-1024-600.dtsi"
+ //#include "lcd-lvds-21-1920-1080.dtsi"
+ //#include "lcd-mipi-10-800-1280-v1.dtsi"
+ //#include "lcd-mipi-10-800-1280-v2.dtsi"
+ //#include "lcd-mipi-8-800-1280.dtsi"
+-//#include "lcd-mipi-5-720-1280.dtsi"
++// #include "lcd-mipi-5-720-1280.dtsi"
++#include "lcd-mipi-p055h022.dtsi"

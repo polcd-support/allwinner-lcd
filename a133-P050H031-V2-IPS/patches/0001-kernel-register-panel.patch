@@ -1,0 +1,33 @@
+diff --git a/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/Makefile b/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/Makefile
+--- a/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/Makefile
++++ b/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/Makefile
+@@ -28,6 +28,7 @@
+ 		lcd/WilliamLcd.o lcd/fx070.o lcd/FX070_DHM18BOEL2_1024X600.o \
+ 		lcd/bp101wx1-206.o lcd/m133x56-105.o lcd/m133x56-105-two.o \
+ 		lcd/k101im2qa04.o lcd/k101im2byl02l.o lcd/B101N531C-28B.o \
+-		lcd/mipi_10_800x1280.o lcd/mipi_8_800x1280.o lcd/mipi_5_720x1280.o lcd/mipi_10_800x1280_AT101DS40I.o
++		lcd/mipi_10_800x1280.o lcd/mipi_8_800x1280.o lcd/mipi_5_720x1280.o lcd/mipi_10_800x1280_AT101DS40I.o \
++		lcd/mipi_p050h031.o
+ 
+ disp-objs += $(obj_low)
+diff --git a/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.c b/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.c
+--- a/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.c
++++ b/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.c
+@@ -42,6 +42,7 @@
+ 	&mipi_10_800x1280_AT101DS40I_panel,
+ 	&mipi_8_800x1280_panel,
+ 	&mipi_5_720x1280_panel,
++	&mipi_p050h031_panel,
+ 	NULL,
+ };
+ 
+diff --git a/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.h b/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.h
+--- a/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.h
++++ b/kernel/linux-4.9/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.h
+@@ -101,5 +101,6 @@
+ extern struct __lcd_panel mipi_10_800x1280_AT101DS40I_panel;
+ extern struct __lcd_panel mipi_8_800x1280_panel;
+ extern struct __lcd_panel mipi_5_720x1280_panel;
++extern struct __lcd_panel mipi_p050h031_panel;
+ 
+ #endif

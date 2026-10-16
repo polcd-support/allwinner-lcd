@@ -1,0 +1,33 @@
+diff --git a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/Makefile b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/Makefile
+--- a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/Makefile
++++ b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/Makefile
+@@ -13,7 +13,7 @@
+ 
+ disp-$(CONFIG_EINK_PANEL_USED) += de/disp_eink_manager.o de/eink_pipeline_manager.o
+ 
+-disp-objs += lcd/panels.o lcd/lcd_source.o lcd/default_panel.o lcd/HSD050BHW4.o lcd/B101N531C-28B.o lcd/mipi_8_800x1280.o lcd/mipi_10_800x1280.o lcd/mipi_10_800x1280_AT101DS40I.o lcd/mipi_5_720x1280.o
++disp-objs += lcd/panels.o lcd/lcd_source.o lcd/default_panel.o lcd/HSD050BHW4.o lcd/B101N531C-28B.o lcd/mipi_8_800x1280.o lcd/mipi_p055h022.o lcd/mipi_10_800x1280.o lcd/mipi_10_800x1280_AT101DS40I.o lcd/mipi_5_720x1280.o
+ 
+ 
+ disp-$(CONFIG_LCD_SUPPORT_HE0801A068) += lcd/he0801a068.o
+diff --git a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.c b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.c
+--- a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.c
++++ b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.c
+@@ -137,6 +137,7 @@
+ 	&mipi_10_800x1280_AT101DS40I_panel,
+ 	&mipi_8_800x1280_panel,
+ 	&mipi_5_720x1280_panel,
++	&mipi_p055h022_panel,
+ 	NULL,
+ };
+ 
+diff --git a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.h b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.h
+--- a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.h
++++ b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.h
+@@ -239,4 +239,5 @@
+ extern __lcd_panel_t mipi_10_800x1280_AT101DS40I_panel;
+ extern __lcd_panel_t mipi_8_800x1280_panel;
+ extern __lcd_panel_t mipi_5_720x1280_panel;
+-#endif
++extern __lcd_panel_t mipi_p055h022_panel;
++#endif
