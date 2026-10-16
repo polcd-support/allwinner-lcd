@@ -1,0 +1,186 @@
+diff --git a/device/config/chips/t113_s4/configs/evb1_auto/linux-5.4/board-mipi-lcd.dts b/device/config/chips/t113_s4/configs/evb1_auto/linux-5.4/board-mipi-lcd.dts
+index 5e02a1e69..a6ab6555f 100755
+--- a/device/config/chips/t113_s4/configs/evb1_auto/linux-5.4/board-mipi-lcd.dts
++++ b/device/config/chips/t113_s4/configs/evb1_auto/linux-5.4/board-mipi-lcd.dts
+@@ -62,7 +62,7 @@ chn_cfg_mode     : Hardware DE channel allocation config. 0:single display with
+ 	def_output_dev           = <0>;
+ 
+ 	fb0_format               = <0>;
+-	fb0_width                = <800>;
++	fb0_width                = <720>;
+ 	fb0_height               = <1280>;
+ 
+ 	fb1_format               = <0>;
+@@ -140,15 +140,15 @@ pull up or pull down(default 0), driver level(default 1), data>
+ &lcd0 {
+ 	lcd_used            = <1>;
+ 
+-	lcd_driver_name     = "mipi_8_800x1280";
++	lcd_driver_name     = "P055H022-IPS-CTP";
+ 	lcd_backlight       = <50>;
+ 	lcd_if              = <4>;
+ 
+-	lcd_x               = <800>;
++	lcd_x               = <720>;
+ 	lcd_y               = <1280>;
+-	lcd_width           = <220>;
+-	lcd_height          = <140>;
+-	lcd_dclk_freq       = <68>;
++	lcd_width           = <68>;
++	lcd_height          = <121>;
++	lcd_dclk_freq       = <62>;
+ 
+ 	lcd_pwm_used        = <1>;
+ 	lcd_pwm_ch          = <7>;
+@@ -156,17 +156,23 @@ pull up or pull down(default 0), driver level(default 1), data>
+ 	lcd_pwm_pol         = <1>;
+ 	lcd_pwm_max_limit   = <255>;
+ 
+-	lcd_hbp             = <36>;
+-	lcd_ht              = <854>;
+-	lcd_hspw            = <18>;
+-	lcd_vbp             = <12>;
+-	lcd_vt              = <1320>;
+-	lcd_vspw            = <4>;
++	/* HX8394F panel porch (spec): HBP 40 / HFP 20 / HSW 4,
++	 *                            VBP 25 / VFP 9 / VSW 2
++	 * Allwinner's lcd_hbp / lcd_vbp INCLUDE the sync width -> 44 / 27,
++	 * ht = 720+44+20 = 784, vt = 1280+27+9 = 1316.
++	 * Identical to the A133 (kickpi-k5c) dtsi that lights this panel. */
++	lcd_hbp             = <44>;
++	lcd_ht              = <784>;
++	lcd_hspw            = <4>;
++	lcd_vbp             = <27>;
++	lcd_vt              = <1316>;
++	lcd_vspw            = <2>;
+ 
+ 	lcd_dsi_lane        = <4>;
+ 	lcd_dsi_if          = <0>;
+ 	lcd_dsi_format      = <0>;
+ 	lcd_dsi_te          = <0>;
++	lcd_dsi_eotp        = <0>;
+ 	lcd_frm             = <0>;
+ 	lcd_io_phase        = <0>;
+ 	lcd_gamma_en        = <0>;
+@@ -177,8 +183,15 @@ pull up or pull down(default 0), driver level(default 1), data>
+ 	lcdgamma4iep        = <22>;
+ 	smart_color         = <90>;
+ 
+-	lcd_bl_en = <&pio PD 18  GPIO_ACTIVE_HIGH>;
++	lcd_pin_power  = "dcdc1";
++	lcd_pin_power1 = "eldo3";
++
++	lcd_power = "dc1sw";
++
++	/* panel reset */
+ 	lcd_gpio_0 = <&pio PD 21 GPIO_ACTIVE_HIGH>;
++	/* power / backlight enable */
++	lcd_gpio_1 = <&pio PD 18 GPIO_ACTIVE_HIGH>;
+ 
+ 	pinctrl-0 = <&dsi4lane_pins_a>;
+ 	pinctrl-1 = <&dsi4lane_pins_b>;
+@@ -316,7 +329,7 @@ pull up or pull down(default 0), driver level(default 1), data>
+ 		ctp_used = <1>;
+ 		gtp_send_cfgs = <1>;
+ 		ctp_twi_addr = <0x5d>;
+-		ctp_screen_max_x = <800>;
++		ctp_screen_max_x = <720>;
+ 		ctp_screen_max_y = <1280>;
+ 		ctp_revert_x_flag = <0x0>;
+ 		ctp_revert_y_flag = <0x0>;
+@@ -353,13 +366,13 @@ pull up or pull down(default 0), driver level(default 1), data>
+ 		compatible = "allwinner,goodix";
+ 		device_type = "ctp";
+ 		reg = <0x5D>;
+-		status = "okay";
++		status = "disabled";
+ 		ctp_name = "gt9xx";
+ 		ctp_twi_id = <0x1>;
+-		ctp_used = <1>;
++		ctp_used = <0>;
+ 		gtp_send_cfgs = <1>;
+ 		ctp_twi_addr = <0x5d>;
+-		ctp_screen_max_x = <800>;
++		ctp_screen_max_x = <720>;
+ 		ctp_screen_max_y = <1280>;
+ 		ctp_revert_x_flag = <0x0>;
+ 		ctp_revert_y_flag = <0x0>;
+diff --git a/device/config/chips/t113_s4/configs/evb1_auto/uboot-board-mipi-lcd.dts b/device/config/chips/t113_s4/configs/evb1_auto/uboot-board-mipi-lcd.dts
+index 840506a5e..3fec126ae 100755
+--- a/device/config/chips/t113_s4/configs/evb1_auto/uboot-board-mipi-lcd.dts
++++ b/device/config/chips/t113_s4/configs/evb1_auto/uboot-board-mipi-lcd.dts
+@@ -37,7 +37,7 @@
+ 	def_output_dev           = <0>;
+ 
+ 	fb0_format               = <0>;
+-	fb0_width                = <800>;
++	fb0_width                = <720>;
+ 	fb0_height               = <1280>;
+ 
+ 	fb1_format               = <0>;
+@@ -57,15 +57,15 @@
+ &lcd0 {
+ 	lcd_used            = <1>;
+ 
+-	lcd_driver_name     = "mipi_8_800x1280";
++	lcd_driver_name     = "P055H022-IPS-CTP";
+ 	lcd_backlight       = <50>;
+ 	lcd_if              = <4>;
+ 
+-	lcd_x               = <800>;
++	lcd_x               = <720>;
+ 	lcd_y               = <1280>;
+-	lcd_width           = <220>;
+-	lcd_height          = <140>;
+-	lcd_dclk_freq       = <68>;
++	lcd_width           = <68>;
++	lcd_height          = <121>;
++	lcd_dclk_freq       = <62>;
+ 
+ 	lcd_pwm_used        = <1>;
+ 	lcd_pwm_ch          = <7>;
+@@ -73,17 +73,21 @@
+ 	lcd_pwm_pol         = <1>;
+ 	lcd_pwm_max_limit   = <255>;
+ 
+-	lcd_hbp             = <36>;
+-	lcd_ht              = <854>;
+-	lcd_hspw            = <18>;
+-	lcd_vbp             = <12>;
+-	lcd_vt              = <1320>;
+-	lcd_vspw            = <4>;
++	/* HX8394F porches: HBP 40 / HFP 20 / HSW 4, VBP 25 / VFP 9 / VSW 2;
++	 * Allwinner's lcd_hbp / lcd_vbp include the sync width -> 44 / 27,
++	 * ht 784, vt 1316 (same as the A133 dtsi that lights this panel). */
++	lcd_hbp             = <44>;
++	lcd_ht              = <784>;
++	lcd_hspw            = <4>;
++	lcd_vbp             = <27>;
++	lcd_vt              = <1316>;
++	lcd_vspw            = <2>;
+ 
+ 	lcd_dsi_lane        = <4>;
+ 	lcd_dsi_if          = <0>;
+ 	lcd_dsi_format      = <0>;
+ 	lcd_dsi_te          = <0>;
++	lcd_dsi_eotp        = <0>;
+ 	lcd_frm             = <0>;
+ 	lcd_io_phase        = <0>;
+ 	lcd_gamma_en        = <0>;
+@@ -94,8 +98,15 @@
+ 	lcdgamma4iep        = <22>;
+ 	smart_color         = <90>;
+ 
+-	lcd_bl_en = <&pio PD 18  GPIO_ACTIVE_LOW>;
++	lcd_pin_power  = "dcdc1";
++	lcd_pin_power1 = "eldo3";
++
++	lcd_power = "dc1sw";
++
++	/* panel reset */
+ 	lcd_gpio_0 = <&pio PD 21 GPIO_ACTIVE_LOW>;
++	/* power / backlight enable */
++	lcd_gpio_1 = <&pio PD 18 GPIO_ACTIVE_LOW>;
+ 
+ 	pinctrl-0 = <&dsi4lane_pins_a>;
+ 	pinctrl-1 = <&dsi4lane_pins_b>;

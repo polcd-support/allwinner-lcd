@@ -1,0 +1,226 @@
+/*
+ * Allwinner Technology CO., Ltd. sun8iw20p1 soc board.
+ *
+ * soc board support.
+ */
+
+#include "uboot-board.dts"
+
+&disp {
+	disp_init_enable         = <1>;
+	disp_mode                = <0>;
+
+	screen0_output_type      = <1>;
+	screen0_output_mode      = <4>;
+
+	screen1_output_type      = <1>;
+	screen1_output_mode      = <4>;
+
+	screen1_output_format    = <0>;
+	screen1_output_bits      = <0>;
+	screen1_output_eotf      = <4>;
+	screen1_output_cs        = <257>;
+	screen1_output_range     = <2>;
+	screen1_output_scan      = <0>;
+	screen1_output_aspect_ratio = <8>;
+
+	dev0_output_type         = <1>;
+	dev0_output_mode         = <4>;
+	dev0_screen_id           = <0>;
+	dev0_do_hpd              = <0>;
+
+	dev1_output_type         = <4>;
+	dev1_output_mode         = <10>;
+	dev1_screen_id           = <1>;
+	dev1_do_hpd              = <1>;
+
+	def_output_dev           = <0>;
+
+	fb0_format               = <0>;
+	fb0_width                = <720>;
+	fb0_height               = <1280>;
+
+	fb1_format               = <0>;
+	fb1_width                = <0>;
+	fb1_height               = <0>;
+	chn_cfg_mode             = <1>;
+
+	disp_para_zone           = <1>;
+	/*VCC-LCD*/
+/*	dc1sw-supply = <&reg_dc1sw>;*/
+	/*VCC-DSI*/
+/*	eldo3-supply = <&reg_eldo3>;*/
+	/*VCC-PD*/
+/*	dcdc1-supply = <&reg_dcdc1>;*/
+};
+
+&lcd0 {
+	lcd_used            = <1>;
+
+	lcd_driver_name     = "P055H022-IPS-CTP";
+	lcd_backlight       = <50>;
+	lcd_if              = <4>;
+
+	lcd_x               = <720>;
+	lcd_y               = <1280>;
+	lcd_width           = <68>;
+	lcd_height          = <121>;
+	lcd_dclk_freq       = <62>;
+
+	lcd_pwm_used        = <1>;
+	lcd_pwm_ch          = <7>;
+	lcd_pwm_freq        = <50000>;
+	lcd_pwm_pol         = <1>;
+	lcd_pwm_max_limit   = <255>;
+
+	/* HX8394F porches: HBP 40 / HFP 20 / HSW 4, VBP 25 / VFP 9 / VSW 2;
+	 * Allwinner's lcd_hbp / lcd_vbp include the sync width -> 44 / 27,
+	 * ht 784, vt 1316 (same as the A133 dtsi that lights this panel). */
+	lcd_hbp             = <44>;
+	lcd_ht              = <784>;
+	lcd_hspw            = <4>;
+	lcd_vbp             = <27>;
+	lcd_vt              = <1316>;
+	lcd_vspw            = <2>;
+
+	lcd_dsi_lane        = <4>;
+	lcd_dsi_if          = <0>;
+	lcd_dsi_format      = <0>;
+	lcd_dsi_te          = <0>;
+	lcd_dsi_eotp        = <0>;
+	lcd_frm             = <0>;
+	lcd_io_phase        = <0>;
+	lcd_gamma_en        = <0>;
+	lcd_bright_curve_en = <0>;
+	lcd_cmap_en         = <0>;
+
+	deu_mode            = <0>;
+	lcdgamma4iep        = <22>;
+	smart_color         = <90>;
+
+	lcd_pin_power  = "dcdc1";
+	lcd_pin_power1 = "eldo3";
+
+	lcd_power = "dc1sw";
+
+	/* panel reset */
+	lcd_gpio_0 = <&pio PD 21 GPIO_ACTIVE_LOW>;
+	/* power / backlight enable */
+	lcd_gpio_1 = <&pio PD 18 GPIO_ACTIVE_LOW>;
+
+	pinctrl-0 = <&dsi4lane_pins_a>;
+	pinctrl-1 = <&dsi4lane_pins_b>;
+};
+
+&lcd0_1 {
+	lcd_used            = <1>;
+	lcd_driver_name     = "mipi_10_800x1280";
+	lcd_backlight       = <50>;
+	lcd_if              = <4>;
+
+	lcd_x               = <800>;
+	lcd_y               = <1280>;
+	lcd_width           = <135>;
+	lcd_height          = <216>;
+	lcd_dclk_freq       = <75>;
+
+	lcd_pwm_used        = <1>;
+	lcd_pwm_ch          = <7>;
+	lcd_pwm_freq        = <50000>;
+	lcd_pwm_pol         = <1>;
+	lcd_pwm_max_limit   = <255>;
+
+	lcd_hbp             = <88>;
+	lcd_ht              = <960>;
+	lcd_hspw            = <4>;
+	lcd_vbp             = <12>;
+	lcd_vt              = <1300>;
+	lcd_vspw            = <4>;
+
+	lcd_dsi_lane        = <4>;
+	lcd_dsi_if          = <0>;
+	lcd_dsi_format      = <0>;
+	lcd_dsi_te          = <0>;
+	lcd_dsi_eotp        = <0>;
+	lcd_frm             = <0>;
+	lcd_gamma_en        = <0>;
+	lcd_bright_curve_en = <0>;
+	lcd_cmap_en         = <0>;
+
+	deu_mode            = <0>;
+	lcdgamma4iep        = <22>;
+	smart_color         = <90>;
+
+
+	lcd_bl_en  = <&pio PD 18 GPIO_ACTIVE_LOW>;
+	lcd_gpio_0 = <&pio PD 21 GPIO_ACTIVE_LOW>;
+	pinctrl-0 = <&dsi4lane_pins_a>;
+	pinctrl-1 = <&dsi4lane_pins_b>;
+};
+
+&lcd0_2{
+	lcd_used            = <1>;
+
+	lcd_driver_name     = "mipi_5_720x1280";
+	lcd_backlight       = <50>;
+	lcd_if              = <4>;
+
+	lcd_x               = <720>;
+	lcd_y               = <1280>;
+	lcd_width           = <62>;
+	lcd_height          = <110>;
+	lcd_dclk_freq       = <68>;
+
+	lcd_pwm_used        = <1>;
+	lcd_pwm_ch          = <7>;
+	lcd_pwm_freq        = <50000>;
+	lcd_pwm_pol         = <1>;
+	lcd_pwm_max_limit   = <255>;
+
+	lcd_hbp             = <47>;
+	lcd_ht              = <782>;
+	lcd_hspw            = <15>;
+	lcd_vbp             = <27>;
+	lcd_vt              = <1322>;
+	lcd_vspw            = <15>;
+
+	lcd_frm             = <0>;
+	lcd_gamma_en        = <0>;
+	lcd_bright_curve_en = <0>;
+	lcd_cmap_en         = <0>;
+
+	deu_mode            = <0>;
+	lcdgamma4iep        = <22>;
+	smart_color         = <90>;
+
+	lcd_dsi_if          = <0>;
+	lcd_dsi_lane        = <4>;
+	lcd_dsi_format      = <0>;
+	lcd_dsi_te          = <0>;
+	lcd_dsi_eotp        = <0>;	
+
+	lcd_pin_power = "dcdc1";
+	lcd_pin_power1 = "eldo3";
+	//lcd_pin_power2 = "dldo2";
+
+	lcd_power = "dc1sw";
+	// lcd_bl_en = <&pio PD 21 1 0 3 1>;
+
+	// reset
+	lcd_gpio_0 = <&pio PD 21 GPIO_ACTIVE_LOW>;
+	// power
+	lcd_gpio_1 = <&pio PD 18 GPIO_ACTIVE_LOW>;
+
+	pinctrl-0 = <&dsi4lane_pins_a>;
+	pinctrl-1 = <&dsi4lane_pins_b>;
+
+};
+
+
+&pwm7 {
+        status = "okay";
+        pinctrl-names = "active", "sleep";
+        pinctrl-0 = <&pwm7_pin_a>;
+        pinctrl-1 = <&pwm7_pin_b>;
+};
+

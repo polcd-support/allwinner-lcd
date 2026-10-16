@@ -1,0 +1,34 @@
+diff --git a/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/Makefile b/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/Makefile
+index edfe28b70..71b778908 100755
+--- a/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/Makefile
++++ b/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/Makefile
+@@ -71,6 +71,7 @@ disp-y += lcd/super_lcd_driver.o
+ disp-y += lcd/mipi_10_800x1280.o
+ disp-y += lcd/mipi_8_800x1280.o
+ disp-y += lcd/mipi_5_720x1280.o
++disp-y += lcd/P055H022-IPS-CTP.o
+ 
+ disp-$(CONFIG_EINK_PANEL_USED) += de/disp_eink_manager.o \
+ 		de/eink_buffer_manager.o de/eink_pipeline_manager.o \
+diff --git a/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.c b/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.c
+index cbb8e35bf..ed0373c1f 100644
+--- a/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.c
++++ b/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.c
+@@ -137,6 +137,7 @@ struct __lcd_panel *panel_array[] = {
+ 	&mipi_10_800x1280_panel,
+ 	&mipi_8_800x1280_panel,
+ 	&mipi_5_720x1280_panel,
++	&p055h022_ips_ctp_panel,
+ 	NULL,
+ };
+ 
+diff --git a/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.h b/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.h
+index 2a8cddad0..a7a872583 100644
+--- a/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.h
++++ b/kernel/linux-5.4/drivers/video/fbdev/sunxi/disp2/disp/lcd/panels.h
+@@ -178,4 +178,5 @@ extern struct __lcd_panel super_lcd_panel;
+ extern struct __lcd_panel mipi_10_800x1280_panel;
+ extern struct __lcd_panel mipi_8_800x1280_panel;
+ extern struct __lcd_panel mipi_5_720x1280_panel;
++extern struct __lcd_panel p055h022_ips_ctp_panel;
+ #endif

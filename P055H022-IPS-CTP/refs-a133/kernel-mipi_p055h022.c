@@ -1,0 +1,221 @@
+/* drivers/video/sunxi/disp2/disp/lcd/k101im2qa04.c
+ *
+ * Copyright (c) 2017 Allwinnertech Co., Ltd.
+ * Author: zhengxiaobin <zhengxiaobin@allwinnertech.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+*/
+#include "mipi_p055h022.h"
+
+static void lcd_power_on(u32 sel);
+static void lcd_power_off(u32 sel);
+static void lcd_bl_open(u32 sel);
+static void lcd_bl_close(u32 sel);
+
+static void lcd_panel_init1(u32 sel);
+static void lcd_panel_exit(u32 sel);
+
+#define panel_reset(sel, val) sunxi_lcd_gpio_set_value(sel, 0, val)
+
+static void lcd_cfg_panel_info(struct panel_extend_para *info)
+{
+	u32 i = 0, j = 0;
+	u32 items;
+	u8 lcd_gamma_tbl[][2] = {
+		{0, 0},
+		{15, 15},
+		{30, 30},
+		{45, 45},
+		{60, 60},
+		{75, 75},
+		{90, 90},
+		{105, 105},
+		{120, 120},
+		{135, 135},
+		{150, 150},
+		{165, 165},
+		{180, 180},
+		{195, 195},
+		{210, 210},
+		{225, 225},
+		{240, 240},
+		{255, 255},
+	};
+
+	u32 lcd_cmap_tbl[2][3][4] = {
+		{
+			{LCD_CMAP_G0, LCD_CMAP_B1, LCD_CMAP_G2, LCD_CMAP_B3},
+			{LCD_CMAP_B0, LCD_CMAP_R1, LCD_CMAP_B2, LCD_CMAP_R3},
+			{LCD_CMAP_R0, LCD_CMAP_G1, LCD_CMAP_R2, LCD_CMAP_G3},
+		},
+		{
+			{LCD_CMAP_B3, LCD_CMAP_G2, LCD_CMAP_B1, LCD_CMAP_G0},
+			{LCD_CMAP_R3, LCD_CMAP_B2, LCD_CMAP_R1, LCD_CMAP_B0},
+			{LCD_CMAP_G3, LCD_CMAP_R2, LCD_CMAP_G1, LCD_CMAP_R0},
+		},
+	};
+
+	items = sizeof(lcd_gamma_tbl) / 2;
+	for (i = 0; i < items - 1; i++) {
+		u32 num = lcd_gamma_tbl[i + 1][0] - lcd_gamma_tbl[i][0];
+
+		for (j = 0; j < num; j++) {
+			u32 value = 0;
+
+			value = lcd_gamma_tbl[i][1] +
+				((lcd_gamma_tbl[i + 1][1] - lcd_gamma_tbl[i][1])
+				 * j) / num;
+			info->lcd_gamma_tbl[lcd_gamma_tbl[i][0] + j] =
+				(value << 16)
+				+ (value << 8) + value;
+		}
+	}
+	info->lcd_gamma_tbl[255] = (lcd_gamma_tbl[items - 1][1] << 16) +
+				   (lcd_gamma_tbl[items - 1][1] << 8)
+				   + lcd_gamma_tbl[items - 1][1];
+
+	memcpy(info->lcd_cmap_tbl, lcd_cmap_tbl, sizeof(lcd_cmap_tbl));
+
+}
+
+static s32 lcd_open_flow(u32 sel)
+{
+	LCD_OPEN_FUNC(sel, lcd_power_on, 50);
+	LCD_OPEN_FUNC(sel, lcd_panel_init1, 50);
+	LCD_OPEN_FUNC(sel, sunxi_lcd_tcon_enable, 100);
+	LCD_OPEN_FUNC(sel, lcd_bl_open, 0);
+
+	return 0;
+}
+
+static s32 lcd_close_flow(u32 sel)
+{
+	LCD_CLOSE_FUNC(sel, lcd_bl_close, 0);
+	LCD_CLOSE_FUNC(sel, lcd_panel_exit, 1);
+	LCD_CLOSE_FUNC(sel, sunxi_lcd_tcon_disable, 10);
+	LCD_CLOSE_FUNC(sel, lcd_power_off, 0);
+
+	return 0;
+}
+
+static void lcd_power_on(u32 sel)
+{
+	panel_reset(sel, 0);
+	sunxi_lcd_power_enable(sel, 0);
+	sunxi_lcd_pin_cfg(sel, 1);
+	sunxi_lcd_power_enable(sel, 1);
+
+    sunxi_lcd_gpio_set_value(sel, 1, 1);
+    sunxi_lcd_delay_ms(200);
+	panel_reset(sel, 1);
+	sunxi_lcd_delay_ms(10);
+	panel_reset(sel, 0);
+	sunxi_lcd_delay_ms(20);
+	panel_reset(sel, 1);
+	sunxi_lcd_delay_ms(120);
+
+}
+
+static void lcd_power_off(u32 sel)
+{
+	panel_reset(sel, 0);
+	sunxi_lcd_delay_ms(1);
+	sunxi_lcd_power_disable(sel, 1);
+	sunxi_lcd_delay_ms(1);
+	sunxi_lcd_power_disable(sel, 0);
+	sunxi_lcd_pin_cfg(sel, 0);
+}
+
+static void lcd_bl_open(u32 sel)
+{
+	sunxi_lcd_pwm_enable(sel);
+	sunxi_lcd_backlight_enable(sel);
+}
+
+static void lcd_bl_close(u32 sel)
+{
+	sunxi_lcd_backlight_disable(sel);
+	sunxi_lcd_pwm_disable(sel);
+}
+
+#define ROWS 20
+#define COLS 62
+
+static u8 data[ROWS][COLS] = {
+	{0x39,0x00,0x04,0xB9,0xFF,0x83,0x94},
+	{0x39,0x00,0x0B,0xB1,0x48,0x11,0x71,0x09,0x32,0x34,0x71,0x51,0x55,0x30},
+	{0x39,0x00,0x07,0xBA,0x63,0x03,0x68,0x6B,0xB2,0xC0},
+	{0x39,0x00,0x06,0xB2,0x00,0x80,0x78,0x0C,0x07},
+	{0x39,0x00,0x16,0xB4,0x0E,0x63,0x0E,0x63,0x0E,0x63,0x01,0x0C,0x7C,0x55,0x00,0x3F,0x0E,0x6B,0x0E,0x6B,0x0E,0x6B,0x01,0x0C,0x7C},
+	{0x39,0x00,0x22,0xD3,0x00,0x00,0x00,0x00,0x3C,0x1C,0x00,0x00,0x32,0x10,0x09,0x00,0x09,0x32,0x15,0xAD,0x05,0xAD,0x32,0x00,0x00,0x00,0x00,0x37,0x03,0x0B,0x0B,0x37,0x00,0x00,0x00,0x0C,0x40},
+	{0x39,0x00,0x2D,0xD5,0x19,0x19,0x18,0x18,0x1B,0x1B,0x1A,0x1A,0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x20,0x21,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x24,0x25,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18},
+	{0x39,0x00,0x2D,0xD6,0x18,0x18,0x19,0x19,0x1B,0x1B,0x1A,0x1A,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x00,0x25,0x24,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x21,0x20,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18},
+	{0x39,0x00,0x3B,0xE0,0x00,0x02,0x07,0x0D,0x0D,0x10,0x12,0x10,0x22,0x32,0x42,0x41,0x4B,0x60,0x66,0x6D,0x7B,0x7F,0x7C,0x8C,0x9A,0x4C,0x49,0x4B,0x4D,0x4E,0x6D,0x7F,0x7F,0x00,0x02,0x07,0x0C,0x0C,0x0F,0x11,0x10,0x22,0x32,0x42,0x41,0x4B,0x5F,0x65,0x6C,0x7A,0x7F,0x7C,0x8C,0x9A,0x4C,0x49,0x4B,0x4D,0x4E,0x6D,0x7F,0x7F},
+	{0x39,0x00,0x02,0xCC,0x03},
+	{0x39,0x00,0x03,0xC0,0x1F,0x31},
+	{0x39,0x00,0x03,0xB6,0x75,0x75},
+	{0x39,0x00,0x02,0xD4,0x02},
+	{0x39,0x00,0x02,0xBD,0x01},
+	{0x39,0x00,0x02,0xB1,0x00},
+	{0x39,0x00,0x02,0xBD,0x00},
+	{0x39,0x00,0x02,0xC6,0xED},
+	{0x39,0xFF,0x02,0x11,0x00},
+	{0x39,0x00,0x02,0x36,0x11},
+	{0x39,0xFF,0x02,0x29,0x00}
+};
+
+static void lcd_panel_init1(u32 sel)
+{
+    int i;
+    u8 command; 
+    u8 *para;
+    u32 para_num;
+    u8 *tmp;
+	printk(KERN_ERR"--kernel!! mipi p055h022 init\n");
+	sunxi_lcd_dsi_clk_enable(sel);
+	sunxi_lcd_delay_ms(100);
+    for(i = 0; i < ROWS; i++) {
+        tmp = data[i];
+        if (tmp[0] == 0x05) {
+            sunxi_lcd_dsi_dcs_write_0para(sel, tmp[3]);
+        } else {
+            command = tmp[3];
+            para_num = tmp[2] - 1;
+            para = tmp + 4;
+            sunxi_lcd_dsi_dcs_write(sel, command, para, para_num);
+        }
+        if (tmp[1] != 0x0)
+            sunxi_lcd_delay_ms(tmp[1]);
+    }
+	
+}
+
+
+static void lcd_panel_exit(u32 sel)
+{
+	sunxi_lcd_dsi_dcs_write_0para(sel, 0x28);
+	sunxi_lcd_delay_ms(1);
+	sunxi_lcd_dsi_dcs_write_0para(sel, 0x10);
+	sunxi_lcd_delay_ms(1);
+}
+
+/*sel: 0:lcd0; 1:lcd1*/
+static s32 lcd_user_defined_func(u32 sel, u32 para1, u32 para2, u32 para3)
+{
+	return 0;
+}
+
+__lcd_panel_t mipi_p055h022_panel = {
+	/* panel driver name, must mach the name of
+	 * lcd_drv_name in sys_config.fex
+	 */
+	.name = "mipi_p055h022",
+	.func = {
+		.cfg_panel_info = lcd_cfg_panel_info,
+			.cfg_open_flow = lcd_open_flow,
+			.cfg_close_flow = lcd_close_flow,
+			.lcd_user_defined_func = lcd_user_defined_func,
+	},
+};

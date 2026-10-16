@@ -1,0 +1,179 @@
+diff --git a/device/config/chips/t113_s4/configs/evb1_auto/linux-5.4/board-mipi-lcd.dts b/device/config/chips/t113_s4/configs/evb1_auto/linux-5.4/board-mipi-lcd.dts
+index 5e02a1e69..63c08b13a 100755
+--- a/device/config/chips/t113_s4/configs/evb1_auto/linux-5.4/board-mipi-lcd.dts
++++ b/device/config/chips/t113_s4/configs/evb1_auto/linux-5.4/board-mipi-lcd.dts
+@@ -62,7 +62,7 @@ chn_cfg_mode     : Hardware DE channel allocation config. 0:single display with
+ 	def_output_dev           = <0>;
+ 
+ 	fb0_format               = <0>;
+-	fb0_width                = <800>;
++	fb0_width                = <720>;
+ 	fb0_height               = <1280>;
+ 
+ 	fb1_format               = <0>;
+@@ -140,15 +140,15 @@ pull up or pull down(default 0), driver level(default 1), data>
+ &lcd0 {
+ 	lcd_used            = <1>;
+ 
+-	lcd_driver_name     = "mipi_8_800x1280";
++	lcd_driver_name     = "P050H031-V2-IPS";
+ 	lcd_backlight       = <50>;
+ 	lcd_if              = <4>;
+ 
+-	lcd_x               = <800>;
++	lcd_x               = <720>;
+ 	lcd_y               = <1280>;
+-	lcd_width           = <220>;
+-	lcd_height          = <140>;
+-	lcd_dclk_freq       = <68>;
++	lcd_width           = <62>;
++	lcd_height          = <110>;
++	lcd_dclk_freq       = <62>;
+ 
+ 	lcd_pwm_used        = <1>;
+ 	lcd_pwm_ch          = <7>;
+@@ -156,17 +156,18 @@ pull up or pull down(default 0), driver level(default 1), data>
+ 	lcd_pwm_pol         = <1>;
+ 	lcd_pwm_max_limit   = <255>;
+ 
+-	lcd_hbp             = <36>;
+-	lcd_ht              = <854>;
+-	lcd_hspw            = <18>;
+-	lcd_vbp             = <12>;
+-	lcd_vt              = <1320>;
+-	lcd_vspw            = <4>;
++	lcd_hbp             = <34>;
++	lcd_ht              = <784>;
++	lcd_hspw            = <4>;
++	lcd_vbp             = <16>;
++	lcd_vt              = <1316>;
++	lcd_vspw            = <2>;
+ 
+ 	lcd_dsi_lane        = <4>;
+ 	lcd_dsi_if          = <0>;
+ 	lcd_dsi_format      = <0>;
+ 	lcd_dsi_te          = <0>;
++	lcd_dsi_eotp        = <0>;
+ 	lcd_frm             = <0>;
+ 	lcd_io_phase        = <0>;
+ 	lcd_gamma_en        = <0>;
+@@ -177,8 +178,15 @@ pull up or pull down(default 0), driver level(default 1), data>
+ 	lcdgamma4iep        = <22>;
+ 	smart_color         = <90>;
+ 
+-	lcd_bl_en = <&pio PD 18  GPIO_ACTIVE_HIGH>;
++	lcd_pin_power  = "dcdc1";
++	lcd_pin_power1 = "eldo3";
++
++	lcd_power = "dc1sw";
++
++	/* reset */
+ 	lcd_gpio_0 = <&pio PD 21 GPIO_ACTIVE_HIGH>;
++	/* power */
++	lcd_gpio_1 = <&pio PD 18 GPIO_ACTIVE_HIGH>;
+ 
+ 	pinctrl-0 = <&dsi4lane_pins_a>;
+ 	pinctrl-1 = <&dsi4lane_pins_b>;
+@@ -313,7 +321,7 @@ pull up or pull down(default 0), driver level(default 1), data>
+ 		status = "okay";
+ 		ctp_name = "gt9xx";
+ 		ctp_twi_id = <0x1>;
+-		ctp_used = <1>;
++		ctp_used = <0>;
+ 		gtp_send_cfgs = <1>;
+ 		ctp_twi_addr = <0x5d>;
+ 		ctp_screen_max_x = <800>;
+@@ -356,7 +364,7 @@ pull up or pull down(default 0), driver level(default 1), data>
+ 		status = "okay";
+ 		ctp_name = "gt9xx";
+ 		ctp_twi_id = <0x1>;
+-		ctp_used = <1>;
++		ctp_used = <0>;
+ 		gtp_send_cfgs = <1>;
+ 		ctp_twi_addr = <0x5d>;
+ 		ctp_screen_max_x = <800>;
+diff --git a/device/config/chips/t113_s4/configs/evb1_auto/uboot-board-mipi-lcd.dts b/device/config/chips/t113_s4/configs/evb1_auto/uboot-board-mipi-lcd.dts
+index 840506a5e..a3551db19 100755
+--- a/device/config/chips/t113_s4/configs/evb1_auto/uboot-board-mipi-lcd.dts
++++ b/device/config/chips/t113_s4/configs/evb1_auto/uboot-board-mipi-lcd.dts
+@@ -37,7 +37,7 @@
+ 	def_output_dev           = <0>;
+ 
+ 	fb0_format               = <0>;
+-	fb0_width                = <800>;
++	fb0_width                = <720>;
+ 	fb0_height               = <1280>;
+ 
+ 	fb1_format               = <0>;
+@@ -57,15 +57,15 @@
+ &lcd0 {
+ 	lcd_used            = <1>;
+ 
+-	lcd_driver_name     = "mipi_8_800x1280";
++	lcd_driver_name     = "P050H031-V2-IPS";
+ 	lcd_backlight       = <50>;
+ 	lcd_if              = <4>;
+ 
+-	lcd_x               = <800>;
++	lcd_x               = <720>;
+ 	lcd_y               = <1280>;
+-	lcd_width           = <220>;
+-	lcd_height          = <140>;
+-	lcd_dclk_freq       = <68>;
++	lcd_width           = <62>;
++	lcd_height          = <110>;
++	lcd_dclk_freq       = <62>;
+ 
+ 	lcd_pwm_used        = <1>;
+ 	lcd_pwm_ch          = <7>;
+@@ -73,19 +73,14 @@
+ 	lcd_pwm_pol         = <1>;
+ 	lcd_pwm_max_limit   = <255>;
+ 
+-	lcd_hbp             = <36>;
+-	lcd_ht              = <854>;
+-	lcd_hspw            = <18>;
+-	lcd_vbp             = <12>;
+-	lcd_vt              = <1320>;
+-	lcd_vspw            = <4>;
++	lcd_hbp             = <34>;
++	lcd_ht              = <784>;
++	lcd_hspw            = <4>;
++	lcd_vbp             = <16>;
++	lcd_vt              = <1316>;
++	lcd_vspw            = <2>;
+ 
+-	lcd_dsi_lane        = <4>;
+-	lcd_dsi_if          = <0>;
+-	lcd_dsi_format      = <0>;
+-	lcd_dsi_te          = <0>;
+ 	lcd_frm             = <0>;
+-	lcd_io_phase        = <0>;
+ 	lcd_gamma_en        = <0>;
+ 	lcd_bright_curve_en = <0>;
+ 	lcd_cmap_en         = <0>;
+@@ -94,8 +89,23 @@
+ 	lcdgamma4iep        = <22>;
+ 	smart_color         = <90>;
+ 
+-	lcd_bl_en = <&pio PD 18  GPIO_ACTIVE_LOW>;
++	lcd_dsi_if          = <0>;
++	lcd_dsi_lane        = <4>;
++	lcd_dsi_format      = <0>;
++	lcd_dsi_te          = <0>;
++	lcd_dsi_eotp        = <0>;
++
++	lcd_pin_power = "dcdc1";
++	lcd_pin_power1 = "eldo3";
++	//lcd_pin_power2 = "dldo2";
++
++	lcd_power = "dc1sw";
++	// lcd_bl_en = <&pio PD 21 1 0 3 1>;
++
++	// reset
+ 	lcd_gpio_0 = <&pio PD 21 GPIO_ACTIVE_LOW>;
++	// power
++	lcd_gpio_1 = <&pio PD 18 GPIO_ACTIVE_LOW>;
+ 
+ 	pinctrl-0 = <&dsi4lane_pins_a>;
+ 	pinctrl-1 = <&dsi4lane_pins_b>;

@@ -1,0 +1,34 @@
+diff --git a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/Makefile b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/Makefile
+index d2f1d379f..dfd2ce49d 100644
+--- a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/Makefile
++++ b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/Makefile
+@@ -83,6 +83,7 @@ disp-y += lcd/SQ101D_Q5DI404_84H501H.o
+ disp-y += lcd/mipi_10_800x1280.o
+ disp-y += lcd/mipi_8_800x1280.o
+ disp-y += lcd/mipi_5_720x1280.o
++disp-y += lcd/P050H031-V2-IPS.o
+ #disp-y += lcd/super_lcd_driver.o
+ ifeq ($(CONFIG_MACH_SUN8IW6),y)
+     export MIPI_DSI_IP_VERSION := 28
+diff --git a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.c b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.c
+index f7f4149f5..5b470f145 100644
+--- a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.c
++++ b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.c
+@@ -235,6 +235,7 @@ __lcd_panel_t* panel_array[] = {
+ 	&mipi_10_800x1280_panel,
+ 	&mipi_8_800x1280_panel,
+ 	&mipi_5_720x1280_panel,
++	&p050h031_v2_ips_panel,
+ 	NULL,
+ };
+ 
+diff --git a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.h b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.h
+index 685bdae92..b73490ef0 100644
+--- a/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.h
++++ b/brandy/brandy-2.0/u-boot-2018/drivers/video/sunxi/disp2/disp/lcd/panels.h
+@@ -350,4 +350,5 @@ extern __lcd_panel_t SQ101D_Q5DI404_84H501_mipi_panel;
+ extern __lcd_panel_t mipi_10_800x1280_panel;
+ extern __lcd_panel_t mipi_8_800x1280_panel;
+ extern __lcd_panel_t mipi_5_720x1280_panel;
++extern __lcd_panel_t p050h031_v2_ips_panel;
+ #endif
